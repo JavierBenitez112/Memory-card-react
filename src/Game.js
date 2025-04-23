@@ -18,19 +18,21 @@ const Game = () => {
     const [secondCard, setSecondCard] = useState(null);
     const [moves, setMoves] = useState(0);
     const [gameOver, setGameOver] = useState(false);
+    const [gameStart, setGameStart] = useState(true);
+
+    const initialCards = [
+        { id: '1', image: img1, title: 'Rengoku', matched: false },
+        { id: '2', image: img2, title: 'Zenitsu', matched: false },
+        { id: '3', image: img3, title: 'Inosuke', matched: false },
+        { id: '4', image: img4, title: 'Tanjiro', matched: false },
+        { id: '5', image: img5, title: 'Tengen', matched: false },
+        { id: '6', image: img6, title: 'Tomioka', matched: false },
+        { id: '7', image: img7, title: 'Nezuko', matched: false },
+        { id: '8', image: img8, title: 'Obanai', matched: false },
+    ];
 
     useEffect(() => {
         // Duplicate the cards array to create pairs
-        const initialCards = [
-            { id: '1', image: img1, title: 'Rengoku', matched: false },
-            { id: '2', image: img2, title: 'Zenitsu', matched: false },
-            { id: '3', image: img3, title: 'Inosuke', matched: false },
-            { id: '4', image: img4, title: 'Tanjiro', matched: false },
-            { id: '5', image: img5, title: 'Tengen', matched: false },
-            { id: '6', image: img6, title: 'Tomioka', matched: false },
-            { id: '7', image: img7, title: 'Nezuko', matched: false },
-            { id: '8', image: img8, title: 'Obanai', matched: false },
-        ];
         const duplicatedCards = [...initialCards, ...initialCards].map((card, index) => ({
             ...card,
             id: String(index + 1), // Assign unique IDs to all cards
@@ -39,6 +41,17 @@ const Game = () => {
         // Shuffle the cards
         const shuffledCards = shuffleArray(duplicatedCards);
         setCards(shuffledCards);
+
+        // Initially flip all cards and then flip back after 5 seconds
+        setFlippedCards(shuffledCards.reduce((acc, card) => {
+            acc[card.id] = true;
+            return acc;
+        }, {}));
+
+        setTimeout(() => {
+            setFlippedCards({});
+            setGameStart(false);
+        }, 5000);
     }, []);
 
     // Function to shuffle array (Fisher-Yates shuffle)
@@ -60,6 +73,8 @@ const Game = () => {
     }
 
     const handleClick = (card) => {
+        if (gameStart) return; // Disable clicks during the initial phase
+
         if (firstCard === null) {
             setFirstCard(card);
             setFlippedCards((prev) => ({
@@ -112,16 +127,6 @@ const Game = () => {
 
     const resetGame = () => {
         // Duplicate the cards array to create pairs
-        const initialCards = [
-            { id: '1', image: img1, title: 'Rengoku', matched: false },
-            { id: '2', image: img2, title: 'Zenitsu', matched: false },
-            { id: '3', image: img3, title: 'Inosuke', matched: false },
-            { id: '4', image: img4, title: 'Tanjiro', matched: false },
-            { id: '5', image: img5, title: 'Tengen', matched: false },
-            { id: '6', image: img6, title: 'Tomioka', matched: false },
-            { id: '7', image: img7, title: 'Nezuko', matched: false },
-            { id: '8', image: img8, title: 'Obanai', matched: false },
-        ];
         const duplicatedCards = [...initialCards, ...initialCards].map((card, index) => ({
             ...card,
             id: String(index + 1), // Assign unique IDs to all cards
@@ -139,7 +144,7 @@ const Game = () => {
 
     return (
         <div className="h-screen centered">
-            <div className="moves">Moves: {moves}</div>
+            <div className="moves">Movimientos: {moves}</div>
             <div className="grid grid-cols-4 gap-4">
                 {cards.map((card) => (
                     <div
@@ -148,18 +153,18 @@ const Game = () => {
                         className={`relative card bg-blue-500 text-white p-4 rounded ${flippedCards[card.id] || card.matched ? 'cardFlip' : ''}`}
                     >
                         <div className="front">
-                            <Rcard image={card.image} title={card.title} />
+                            <Rcard image="https://opengameart.org/sites/default/files/card%20back%20red.png" title="" />
                         </div>
                         <div className="absolute top-0 back">
-                            <Rcard image="https://opengameart.org/sites/default/files/card%20back%20red.png" title="Back" />
+                            <Rcard image={card.image} title={card.title} />
                         </div>
                     </div>
                 ))}
             </div>
             {gameOver && (
                 <div className="game-over">
-                    <h2>Game Over! You won in {moves} moves.</h2>
-                    <button onClick={resetGame}>Play Again</button>
+                    <h2>Game Over! Ganaste en: {moves} movimientos.</h2>
+                    <button onClick={resetGame}>¿Jugar de nuevo?</button>
                 </div>
             )}
         </div>
