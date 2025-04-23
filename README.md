@@ -1,6 +1,6 @@
 # Juego de Memoria
 
-This project is a memory game built with JavaScript, React, and Webpack. Below are the steps to set up and run the project.
+This project is a memory game built with JavaScript, React, Tailwind, and Webpack. Below are the steps to set up and run the project.
 
 ## Prerequisites
 
