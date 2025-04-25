@@ -1,6 +1,6 @@
 .card{
     transform-style: preserve-3d;
-    transition: all 0.8 ease;
+    transition: all 1s cubic-bezier(0.7, -.5, 0.3, 1.8);
 }
 
 .front{
